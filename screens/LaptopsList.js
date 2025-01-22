@@ -1,9 +1,9 @@
 import { View, Text, FlatList } from "react-native";
-import { ListItem, Button } from "@rneui/base";
+import { ListItem, Button, FAB } from "@rneui/base";
 import { getAllLaptops } from "../rest_client/laptops";
 import { useState } from "react"
 
-export const LaptopList = () => {
+export const LaptopList = ({ navigation }) => {
     const [listLaptops, setListLaptops] = useState([]);
 
     const Laptops = ({ laptop }) => {
@@ -31,6 +31,12 @@ export const LaptopList = () => {
             data={listLaptops}
             renderItem={({ item }) => {
                 return <Laptops laptop={ item }/>
+            }}
+        />
+        <FAB
+            title="+"
+            onPress={() => {
+                navigation.navigate('Registrar laptop');
             }}
         />
     </View>

@@ -14,3 +14,31 @@ export const getAllLaptops = (fnRefreshList)  => {
         }
     )
 }
+
+export const saveItemRest = (laptop, fnSuccess)  => {
+    const config = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+            {
+                marca: laptop.marca,
+                procesador: laptop.procesador,
+                memoria: laptop.memoria,
+                disco: laptop.disco
+            }
+        )
+    }
+
+    fetch(
+        URL + 'laptops',
+    ).then(
+        response => response.json()
+    ).then(
+        (data) => {
+            console.log(data);
+            fnSuccess();
+        }
+    )
+}
