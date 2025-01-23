@@ -1,13 +1,20 @@
 import { FAB, Input } from "@rneui/base"
 import { useState } from "react"
 import { Alert, View } from "react-native"
-import { saveItemRest } from "../rest_client/laptops";
+import { saveItemRest, updateItemRest } from "../rest_client/laptops";
 
-export const LaptopForm = ({ navigation }) => {
-    const [marca, setMarca] = useState();
-    const [procesador, setProcesador] = useState();
-    const [memoria, setMemoria] = useState();
-    const [disco, setDisco] = useState();
+export const LaptopForm = ({ navigation, route }) => {
+    let data = route.params.item;
+    let isNew = true;
+
+    if(data != null) {
+        isNew = false;
+    }
+
+    const [marca, setMarca] = useState(isNew?null:data.marca);
+    const [procesador, setProcesador] = useState(isNew?null:data.procesador);
+    const [memoria, setMemoria] = useState(isNew?null:data.memoria);
+    const [disco, setDisco] = useState(isNew?null:data.disco);
 
     const saveItem = () => {
         console.log("Laptop guardada")
@@ -20,16 +27,27 @@ export const LaptopForm = ({ navigation }) => {
             },
             showMessageSuccess
         )
-        navigation.goBack();
+    }
+
+    const updateItem = () => {
+        console.log("Laptop actualizada")
+        updateItemRest({
+            id: data.id,
+            marca: marca,
+            procesador: procesador,
+            memoria: memoria,
+            disco: disco
+        }, showMessageSuccess)
     }
 
     const showMessageSuccess = () => {
-        Alert.alert("Success", "Item guardado con éxito");
+        Alert.alert("Success", isNew?"Item guardado con éxito":"Item actualizado");
+        navigation.goBack();
     }
 
     return <View>
         <Input
-            placeholder="Ingrese la marca"
+            placeholder="Marca"
             value={marca}
             onChangeText={(value) => {
                 setMarca(value);
@@ -58,7 +76,7 @@ export const LaptopForm = ({ navigation }) => {
         />
         <FAB
             title="Guardar"
-            onPress={saveItem}
+            onPress={ isNew?saveItem:updateItem }
         />
     </View>
 }

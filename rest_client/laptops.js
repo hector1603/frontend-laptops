@@ -32,7 +32,7 @@ export const saveItemRest = (laptop, fnSuccess)  => {
     }
 
     fetch(
-        URL + 'laptops',
+        URL + 'laptops', config 
     ).then(
         response => response.json()
     ).then(
@@ -41,4 +41,35 @@ export const saveItemRest = (laptop, fnSuccess)  => {
             fnSuccess();
         }
     )
+}
+export const updateItemRest = (laptop, fnSuccess) => {
+    const config = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id: laptop.id,
+            marca: laptop.marca,
+            procesador: laptop.procesador,
+            memoria: laptop.memoria,
+            disco: laptop.disco
+        })
+    }
+
+    fetch(`${URL}laptop/${laptop.id}`, config)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            fnSuccess();
+        })
+        .catch(error => {
+            console.error('Error al actualizar el elemento:', error);
+            console.error('URL usada:', `${URL}laptop/${laptop.id}`);
+        });
 }

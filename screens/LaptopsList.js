@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableHighlight } from "react-native";
 import { ListItem, Button, FAB } from "@rneui/base";
 import { getAllLaptops } from "../rest_client/laptops";
 import { useState } from "react"
@@ -7,12 +7,20 @@ export const LaptopList = ({ navigation }) => {
     const [listLaptops, setListLaptops] = useState([]);
 
     const Laptops = ({ laptop }) => {
-        return <ListItem>
-            <ListItem.Content>
-                <ListItem.Title>{ laptop.marca } {laptop.procesador}</ListItem.Title>
-                <ListItem.Subtitle>Disco: { laptop.memoria }</ListItem.Subtitle>
-            </ListItem.Content>
-        </ListItem>
+        return (
+            <TouchableHighlight
+                onPress={() => {
+                    navigation.navigate('Registrar laptop', { item:laptop })
+                }}
+            >
+                <ListItem>
+                    <ListItem.Content>
+                        <ListItem.Title>{ laptop.marca } {laptop.procesador}</ListItem.Title>
+                        <ListItem.Subtitle>Disco: { laptop.memoria }</ListItem.Subtitle>
+                    </ListItem.Content>
+                </ListItem>
+            </TouchableHighlight>
+        );
     }
 
     fnRefreshList = (laptops) => {
@@ -32,11 +40,12 @@ export const LaptopList = ({ navigation }) => {
             renderItem={({ item }) => {
                 return <Laptops laptop={ item }/>
             }}
+            keyExtractor={(item) => item.id}
         />
         <FAB
             title="+"
             onPress={() => {
-                navigation.navigate('Registrar laptop');
+                navigation.navigate('Registrar laptop', {});
             }}
         />
     </View>
