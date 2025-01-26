@@ -1,7 +1,7 @@
 import { FAB, Input } from "@rneui/base"
 import { useState } from "react"
 import { Alert, View } from "react-native"
-import { saveItemRest, updateItemRest } from "../rest_client/laptops";
+import { saveItemRest, updateItemRest, deleteItemRest } from "../rest_client/laptops";
 
 export const LaptopForm = ({ navigation, route }) => {
     let data = route.params.item;
@@ -25,7 +25,7 @@ export const LaptopForm = ({ navigation, route }) => {
                 memoria: memoria,
                 disco: disco
             },
-            showMessageSuccess
+            showMessage
         )
     }
 
@@ -37,11 +37,35 @@ export const LaptopForm = ({ navigation, route }) => {
             procesador: procesador,
             memoria: memoria,
             disco: disco
-        }, showMessageSuccess)
+        }, showMessage)
     }
 
-    const showMessageSuccess = () => {
-        Alert.alert("Success", isNew?"Item guardado con éxito":"Item actualizado");
+    const deleteItem = () => {
+        console.log("Laptop eliminada")
+        deleteItemRest(
+            {
+                id: data.id
+            }, showMessage
+        )
+    }
+
+    const confirmDelete = () => {
+        Alert.alert("CONFIRMAR", 
+            "¿Desea eliminar este item?", 
+            [
+                {
+                    text: "Cancelar"
+                },
+                {
+                    text: "Eliminar",
+                    onPress: deleteItem
+                }
+            ]
+        )
+    }
+
+    const showMessage = (message) => {
+        Alert.alert("Success", message);
         navigation.goBack();
     }
 
@@ -78,5 +102,13 @@ export const LaptopForm = ({ navigation, route }) => {
             title="Guardar"
             onPress={ isNew?saveItem:updateItem }
         />
+        {
+            isNew ? <View></View> : <FAB
+                title = "Eliminar"
+                onPress = {
+                    confirmDelete
+                }
+            />
+        }
     </View>
 }

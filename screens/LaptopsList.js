@@ -1,10 +1,14 @@
 import { View, Text, FlatList, TouchableHighlight } from "react-native";
 import { ListItem, Button, FAB } from "@rneui/base";
 import { getAllLaptops } from "../rest_client/laptops";
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export const LaptopList = ({ navigation }) => {
     const [listLaptops, setListLaptops] = useState([]);
+
+    useEffect(() => {
+        getAllLaptops(fnRefreshList)
+    }, [])
 
     const Laptops = ({ laptop }) => {
         return (
@@ -28,13 +32,6 @@ export const LaptopList = ({ navigation }) => {
     }
 
     return <View>
-        <Text>Lista de laptops</Text>
-        <Button
-            title='Consultar'
-            onPress={() => {
-                getAllLaptops(fnRefreshList)
-            }}
-        />
         <FlatList
             data={listLaptops}
             renderItem={({ item }) => {

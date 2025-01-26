@@ -1,4 +1,4 @@
-const IP = "192.168.0.6";
+const IP = "192.168.0.8";
 const PORT = 3000;
 const URL = `http://${IP}:${PORT}/`;
 
@@ -15,7 +15,7 @@ export const getAllLaptops = (fnRefreshList)  => {
     )
 }
 
-export const saveItemRest = (laptop, fnSuccess)  => {
+export const saveItemRest = (laptop, fnSfnMessageuccess)  => {
     const config = {
         method: 'POST',
         headers: {
@@ -38,11 +38,11 @@ export const saveItemRest = (laptop, fnSuccess)  => {
     ).then(
         (data) => {
             console.log(data);
-            fnSuccess();
+            fnMessage("Item registrado con éxito");
         }
     )
 }
-export const updateItemRest = (laptop, fnSuccess) => {
+export const updateItemRest = (laptop, fnMessage) => {
     const config = {
         method: 'PUT',
         headers: {
@@ -66,10 +66,33 @@ export const updateItemRest = (laptop, fnSuccess) => {
         })
         .then(data => {
             console.log(data);
-            fnSuccess();
+            fnMessage("Item actualizado");
         })
         .catch(error => {
             console.error('Error al actualizar el elemento:', error);
             console.error('URL usada:', `${URL}laptop/${laptop.id}`);
         });
+}
+
+export const deleteItemRest  = (laptop, fnMessage)  => {
+    const config = {
+        method: 'DELETE'
+    }
+
+    fetch(
+        URL + 'laptop/' + laptop.id, config
+    ).then(response => {
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        fnMessage("Item elimando");
+    })
+    .catch(error => {
+        console.error('Erroral eliminar: ', error);
+        console.error('URL usada:', `${URL}laptop/${laptop.id}`);
+    });
 }
